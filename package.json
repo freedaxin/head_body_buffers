@@ -1,0 +1,11 @@
+{
+    "name": "head_body_buffers",
+    "version": "1.0.0",
+    "author": "Darcy Wang",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/freedaxin/head_body_buffers.git"
+    }
+    "description": "head body packet parser for node.js",
+    "main":"./head_body_buffers"
+}
