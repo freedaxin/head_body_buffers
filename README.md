@@ -6,6 +6,10 @@ If the "body" is in a single buffer, data will not be copyed to a new buffer, ju
 
 see the test for usage.
 
+# Install
+
+npm install head_body_buffers
+
 # Example
 ```javascript
 var net = require('net');
