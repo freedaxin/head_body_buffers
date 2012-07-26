@@ -1,7 +1,6 @@
 /**
- * test case, can be excuted by mocha:
- *  mocha -u exports -R spec ./test_head_body_buffers.js
- * test by mysql protocal:
+ * test case, can be excuted by mocha
+ * test by mysql packet:
  *  http://forge.mysql.com/wiki/MySQL_Internals_ClientServer_Protocol
  */
 
@@ -34,17 +33,20 @@ packet.write(TEST_SQL, 5);
 
 var hbd = new HeadBodyBuffers(4, packetLength);
 exports.init = function () {
-    hbd.on('packet', function (head, body) {
+    hbd.on('packet', function (packet) {
+        var head = packet.slice(0, 4);
+        var body = packet.slice(4);
         //console.log("head:", head, head.length);
-        //console.log("body:", body, body.length);
-        assert.equal(head[0], 0x02);
+        //console.log("body:", body.toString(), body.length);
+        //console.log("body:", body, body.length, packet.length);
+        assert.equal(packet[0], 0x02);
         assert.equal(body[0], COM_QUERY);
         assert.equal(body.length, packetLength(head));
         assert.equal(body.toString(null, 1, 1+TEST_SQL.length), TEST_SQL);
     });
 }
 
-exports.testComplete = function () {
+exports.testSingleBufferAsPacket = function () {
     hbd.addBuffer(packet);
 }
 
@@ -54,22 +56,21 @@ exports.testHeadBody = function () {
 }
 
 exports.testPieces = function () {
-    // head: 0x02010000
-    var buff1 = packet.slice(0, 2);
-    hbd.addBuffer(buff1);
+    var buff = null;
+    buff = packet.slice(0, 2);
+    hbd.addBuffer(buff);
 
-    var buff2 = packet.slice(2, 2+2);
-    hbd.addBuffer(buff2);
+    buff = packet.slice(2, 2+2);
+    hbd.addBuffer(buff);
 
-    var buff3 = packet.slice(4, 4+1);
-    hbd.addBuffer(buff3);
+    buff = packet.slice(4, 4+1);
+    hbd.addBuffer(buff);
 
-    var buff4 = packet.slice(5);
-    hbd.addBuffer(buff4);
+    buff = packet.slice(5);
+    hbd.addBuffer(buff);
 }
 
-exports.testPieces2 = function () {
-    //console.log("testPieces2");
+exports.testPiecesRandom = function () {
     var times = 10000;
     var times_for_log = times;
     while (--times) {
@@ -92,9 +93,6 @@ exports.testPieces2 = function () {
         hbd.addBuffer(buff1);
         hbd.addBuffer(buff2);
         hbd.addBuffer(buff3);
+        //console.log(buff1, buff2, buff3);
     }
-    //console.log("%d times testPieces2 finished", times_for_log);
-//assert(false);
 }
-
-//setTimeout(function() { var a=1; }, 1000);

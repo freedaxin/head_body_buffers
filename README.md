@@ -2,9 +2,9 @@
 
 When transfer packets in network composed of a fixed length "head" and a variable length "body", the "data" event emitted by node socket probably not a complete packet, but part of several packets. This tool help you get the "head" and "body" from the buffers.
 
-If the "body" is in a single buffer, data will not be copyed to a new buffer, just use buffer.slice() to reference data.
+If the "head" and "body" is in a single buffer, data will not be copyed to a new buffer, just use buffer.slice() to reference data.
 
-see the test for usage.
+see the test for more usage samples.
 
 # Install
 
@@ -23,9 +23,11 @@ function packetLength(data) {
 }
 
 var hbd = new HeadBodyBuffers(4, packetLength);
-hbd.on('packet', function (head, body) {
+hbd.on('packet', function (packet) {
+    var head = packet.slice(0, 4);
+    var body = packet.slice(4);
     console.log("head:", head, head.length);
-    console.log("body:", body, body.length);
+    console.log("body:", body.toString(), body.length);
 });
 
 var client = net.connect(3306);
