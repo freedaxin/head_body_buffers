@@ -1,3 +1,4 @@
+[![build status](https://secure.travis-ci.org/freedaxin/head_body_buffers.png)](http://travis-ci.org/freedaxin/head_body_buffers)
 # Overview
 
 When transfer packets in network composed of a fixed length "head" and a variable length "body", the "data" event emitted by node socket probably not a complete packet, but part of several packets. This tool help you get the "head" and "body" from the buffers.
