@@ -12,10 +12,7 @@ var HeadBodyBuffers = require('../head_body_buffers.js').HeadBodyBuffers;
 * @param {Buffer} data
 */
 function packetLength(data) {
-    var len = data[0];
-    len += (data[1] << 8);
-    len += (data[2] << 16);
-    return len;
+    return data[0] + (data[1] << 8) + (data[2] << 16);
 }
 
 var COM_QUERY = 3;
