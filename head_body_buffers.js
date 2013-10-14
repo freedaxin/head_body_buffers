@@ -49,9 +49,9 @@ HeadBodyBuffers.prototype._checkEnoughData = function () {
             // read head finished, to read body
             this.bytes_to_read = this.getBodyLength(this.head);
             // head and body in the same buffer?
-            if (this.curr_pos >= 4 &&
+            if (this.curr_pos >= this.head_length &&
                 this.curr_pos + this.bytes_to_read <= first_buff.length) {
-                var packet = first_buff.slice(this.curr_pos - 4, this.curr_pos + this.bytes_to_read);
+                var packet = first_buff.slice(this.curr_pos - this.head_length, this.curr_pos + this.bytes_to_read);
                 this._skipData(this.bytes_to_read);
                 // to read head again
                 this.head = null;
@@ -59,7 +59,7 @@ HeadBodyBuffers.prototype._checkEnoughData = function () {
                 this.emit('packet', packet);
             }
         } else {
-            this.head = new Buffer(4);
+            this.head = new Buffer(this.head_length);
             this._dataToBuffer(this.head, 0);
             // read head finished, to read body
             this.bytes_to_read = this.getBodyLength(this.head);
